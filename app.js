@@ -11,10 +11,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json()); // creates express http server
 
 
-const fs = require('fs');
-
-let config = fs.readFileSync('config.json');
-let page_token = config["page_token"];
+let page_token = process.env.page_token;
 
 // Sets server port and logs message on success
 app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
