@@ -3,11 +3,40 @@
 // Imports dependencies and set up http server
 const
   express = require('express'),
-  bodyParser = require('body-parser'),
-  app = express().use(bodyParser.json()); // creates express http server
+  session = require('client-sessions');
+  bodyParser = require('body-parser');
+  app = express();
+  app.use(bodyParser.urlencoded({extended: false}));
+  app.use(bodyParser.json()); // creates express http server
 
 // Sets server port and logs message on success
 app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
+
+ //Set up session handler
+app.use(session({
+  cookieName: 'session',
+  secret: '86i495c/)hy9ybyJ)6ek|883e3V[6%Dc`c~Skio*X|qZR6JYmOeI.=TuR>t`W^$',
+  duration: 30 * 60 * 1000,
+  activeDuration: 5 * 60 * 1000,
+}));
+
+app.get('/', function(req, res) {
+  res.send('Hi I am a chatbot\n');
+});
+
+
+page_token = ""
+
+url = 'https://users.premierleague.com/accounts/login/'
+payload = {
+ 'password': "",
+ 'login': '',
+ 'redirect_uri': 'https://fantasy.premierleague.com/a/login',
+ 'app': 'plfpl-web'
+}
+session.post(url, data=payload)
+
+
 
 
 
@@ -27,8 +56,11 @@ app.post('/webhook', (req, res) => {
 
       // Gets the message. entry.messaging is an array, but
       // will only ever contain one message, so we get index 0
-      let webhook_event = entry.messaging[0];
-      console.log(webhook_event);
+      let sender = entry.sender.id
+      if (entry.messaging)
+        let message = entry.messaging[0];
+        console.log(message);
+        sendText(sender, "Text echo: " + message)
     });
 
     // Returns a '200 OK' response to all requests
@@ -40,6 +72,27 @@ app.post('/webhook', (req, res) => {
 
 });
 
+
+function sendText(sender, text) {
+  let messageData = {text: text};
+  request({
+    url: "https://graph.facebook.com/v3.3/me/messages",
+    qs: {access_token, token},
+    method: "POST",
+    json: {
+      receipt: {id: sender}, 
+      message: messageData
+    }
+  },
+    function(error, response, body) {
+      if (error) {
+        console.log("sending error")
+      } else if (response.body.error) {
+        console.log("response body error")
+      }
+    }
+  )
+ }
 
 
 // Adds support for GET requests to our webhook
@@ -61,8 +114,7 @@ app.get('/webhook', (req, res) => {
 
       // Responds with the challenge token from the request
       console.log('WEBHOOK_VERIFIED');
-     // res.status(200).send(challenge);
-      res.sendFile(__dirname + '/index.html');
+      res.status(200).send(challenge);
     } else {
       // Responds with '403 Forbidden' if verify tokens do not match
       res.sendStatus(403);
