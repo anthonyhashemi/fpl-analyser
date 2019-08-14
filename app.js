@@ -59,10 +59,8 @@ app.post('/webhook', (req, res) => {
         //   return_message = players_data;
         // }
         if (message === "All players") {
-          all_players = get_all_players()
-          return_message = all_players.slice(1,10).toString()
+
         }
-        sendText(sender, return_message)
       }
     });
 
@@ -77,21 +75,31 @@ app.post('/webhook', (req, res) => {
 
 
 
-function get_all_players(player, stat_fields) {
-  raw_response = request({
-    url: "https://draft.premierleague.com/api/bootstrap-static",
-    method: "GET",
-  },
+function send_all_players_list() {
+  request(
+    {
+      url: "https://draft.premierleague.com/api/bootstrap-static",
+      method: "GET",
+    },
     function(error, response, body) {
       if (error) {
-        console.log("sending error")
+        console.log("sending error");
       } else if (response.body.error) {
-        console.log("response body error")
+        console.log("response body error");
       }
+      let json_response = JSON.parse(body);
+      console.log(Object.keys(json_response));
+      let all_players = json_response["elements"];
+      let players_points = [];
+      all_players.forEach(function(player) {
+        players_points.push(([player["web_name"], player["total_points"]]));
+      });
+      let return_message = players_points.slice(1, 10).toString();
+      console.log(return_message);
     }
-  ) 
-  return 
+  );
 }
+
 
 
 // function get_player_stats(player, stat_fields) {
