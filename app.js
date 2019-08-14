@@ -3,11 +3,12 @@
 // Imports dependencies and set up http server
 const
   express = require('express'),
-  session = require('client-sessions');
-  bodyParser = require('body-parser');
+  session = require('client-sessions'),
+  bodyParser = require('body-parser'),
   app = express();
-  app.use(bodyParser.urlencoded({extended: false}));
-  app.use(bodyParser.json()); // creates express http server
+
+app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.json()); // creates express http server
 
 // Sets server port and logs message on success
 app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
