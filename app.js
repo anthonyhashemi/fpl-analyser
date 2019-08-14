@@ -62,7 +62,7 @@ app.get('/webhook', (req, res) => {
       // Responds with the challenge token from the request
       console.log('WEBHOOK_VERIFIED');
       res.status(200).send(challenge);
-
+      res.sendFile(__dirname + '/index.html');
     } else {
       // Responds with '403 Forbidden' if verify tokens do not match
       res.sendStatus(403);
