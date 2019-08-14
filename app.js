@@ -44,7 +44,7 @@ app.post('/webhook', (req, res) => {
       // Gets the message. entry.messaging is an array, but
       // will only ever contain one message, so we get index 0
       if (entry.messaging) {
-        let return_message = "Sorry, I didn't get that.\nOptions:\nAll players\nThis will give you a list of all players in FPL"
+        let return_message = "Sorry, I didn't get that.\nOptions:\n'All players'\nThis will give you a list of all players in FPL"
         let messaging = entry.messaging[0];
         let sender = messaging.sender.id;
         let message = messaging.message.text;
@@ -60,7 +60,7 @@ app.post('/webhook', (req, res) => {
         // }
         if (message === "All players") {
           all_players = get_all_players()
-          return_message = all_players
+          return_message = all_players.slice(1:10).toString()
         }
         sendText(sender, return_message)
       }
