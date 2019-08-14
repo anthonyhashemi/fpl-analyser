@@ -29,17 +29,13 @@ app.get('/', function(req, res) {
 });
 
 
-url = 'https://users.premierleague.com/accounts/login/'
-payload = {
+let url = 'https://users.premierleague.com/accounts/login/'
+let payload = {
  'password': "",
  'login': '',
  'redirect_uri': 'https://fantasy.premierleague.com/a/login',
  'app': 'plfpl-web'
 }
-session.post(url, data=payload)
-
-
-
 
 
 
