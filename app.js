@@ -57,10 +57,11 @@ app.post('/webhook', (req, res) => {
       // Gets the message. entry.messaging is an array, but
       // will only ever contain one message, so we get index 0
       let sender = entry.sender.id
-      if (entry.messaging)
+      if (entry.messaging) {
         let message = entry.messaging[0];
         console.log(message);
         sendText(sender, "Text echo: " + message)
+      }
     });
 
     // Returns a '200 OK' response to all requests
