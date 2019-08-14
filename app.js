@@ -60,7 +60,7 @@ app.post('/webhook', (req, res) => {
         // }
         if (message === "All players") {
           all_players = get_all_players()
-          return_message = all_players.slice(1:10).toString()
+          return_message = all_players.slice(1,10).toString()
         }
         sendText(sender, return_message)
       }
