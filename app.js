@@ -5,6 +5,7 @@ const
   express = require('express'),
   session = require('client-sessions'),
   bodyParser = require('body-parser'),
+  request = require('request'),
   app = express();
 
 app.use(bodyParser.urlencoded({extended: false}));
