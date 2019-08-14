@@ -89,7 +89,7 @@ function send_all_players_list(recipient) {
       let players_points = [];
       all_players.forEach(function(player) {
         players_points.push([
-          player["web_name"] + ": " + player["total_points"] + "points\n",
+          player["web_name"] + ": " + player["total_points"] + " points\n"
         ]);
       });
       let return_message = players_points.slice(1, 50).toString().replace;
