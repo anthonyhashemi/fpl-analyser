@@ -84,7 +84,6 @@ function send_all_players_list(recipient) {
         console.log("response body error");
       }
       let json_response = JSON.parse(body);
-      console.log(Object.keys(json_response));
       let all_players = json_response["elements"];
       let players_points = [];
       all_players.forEach(function(player) {
@@ -92,7 +91,7 @@ function send_all_players_list(recipient) {
           player["web_name"] + ": " + player["total_points"] + " points\n"
         ]);
       });
-      let return_message = players_points.slice(1, 50).toString();
+      let return_message = players_points.toString().replace(",", "");
       sendText(recipient, return_message);
     }
   );
