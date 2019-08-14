@@ -92,7 +92,7 @@ function send_all_players_list(recipient) {
           player["web_name"] + ": " + player["total_points"] + "points\n",
         ]);
       });
-      let return_message = players_points.toString().replace;
+      let return_message = players_points.slice(1, 50).toString().replace;
       sendText(recipient, return_message);
     }
   );
