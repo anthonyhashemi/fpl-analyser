@@ -59,7 +59,7 @@ app.post('/webhook', (req, res) => {
         //   return_message = players_data;
         // }
         if (message === "All players") {
-
+          send_all_players_list();
         }
       }
     });
@@ -75,7 +75,7 @@ app.post('/webhook', (req, res) => {
 
 
 
-function send_all_players_list() {
+function send_all_players_list(recipient) {
   request(
     {
       url: "https://draft.premierleague.com/api/bootstrap-static",
@@ -95,7 +95,7 @@ function send_all_players_list() {
         players_points.push(([player["web_name"], player["total_points"]]));
       });
       let return_message = players_points.slice(1, 10).toString();
-      console.log(return_message);
+      sendText(recipient, return_message);
     }
   );
 }
@@ -132,14 +132,14 @@ function send_all_players_list() {
 //   return 
 // }
 
-function sendText(sender, text) {
+function sendText(recipient, text) {
   let messageData = {text: text};
   request({
     url: "https://graph.facebook.com/v4.0/me/messages",
     qs: {access_token: page_token},
     method: "POST",
     json: {
-      recipient: {id: sender}, 
+      recipient: {id: recipient}, 
       message: messageData
     }
   },
