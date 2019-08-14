@@ -94,35 +94,35 @@ function get_all_players(player, stat_fields) {
 }
 
 
-function get_player_stats(player, stat_fields) {
-  https://draft.premierleague.com/api/bootstrap-static
-let url = 'https://users.premierleague.com/accounts/login/'
-let payload = {
- 'password': "",
- 'login': '',
- 'redirect_uri': 'https://fantasy.premierleague.com/a/login',
- 'app': 'plfpl-web'
-}
+// function get_player_stats(player, stat_fields) {
+//   https://draft.premierleague.com/api/bootstrap-static
+// let url = 'https://users.premierleague.com/accounts/login/'
+// let payload = {
+//  'password': "",
+//  'login': '',
+//  'redirect_uri': 'https://fantasy.premierleague.com/a/login',
+//  'app': 'plfpl-web'
+// }
 
-  raw_response = request({
-    url: "https://graph.facebook.com/v4.0/me/messages",
-    qs: {access_token: page_token},
-    method: "GET",
-    json: {
-      recipient: {id: sender}, 
-      message: messageData
-    }
-  },
-    function(error, response, body) {
-      if (error) {
-        console.log("sending error")
-      } else if (response.body.error) {
-        console.log("response body error")
-      }
-    }
-  ) 
-  return 
-}
+//   raw_response = request({
+//     url: "https://graph.facebook.com/v4.0/me/messages",
+//     qs: {access_token: page_token},
+//     method: "GET",
+//     json: {
+//       recipient: {id: sender}, 
+//       message: messageData
+//     }
+//   },
+//     function(error, response, body) {
+//       if (error) {
+//         console.log("sending error")
+//       } else if (response.body.error) {
+//         console.log("response body error")
+//       }
+//     }
+//   ) 
+//   return 
+// }
 
 function sendText(sender, text) {
   let messageData = {text: text};
