@@ -59,7 +59,7 @@ app.post('/webhook', (req, res) => {
         //   return_message = players_data;
         // }
         if (message === "All players") {
-          send_all_players_list();
+          send_all_players_list(sender);
         }
       }
     });
