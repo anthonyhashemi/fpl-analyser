@@ -30,18 +30,6 @@ app.get('/', function(req, res) {
 });
 
 
-let url = 'https://users.premierleague.com/accounts/login/'
-let payload = {
- 'password': "",
- 'login': '',
- 'redirect_uri': 'https://fantasy.premierleague.com/a/login',
- 'app': 'plfpl-web'
-}
-
-
-
-
-
 // Creates the endpoint for our webhook
 app.post('/webhook', (req, res) => {
 
@@ -55,16 +43,26 @@ app.post('/webhook', (req, res) => {
 
       // Gets the message. entry.messaging is an array, but
       // will only ever contain one message, so we get index 0
-      
-      
-      let x = 2
-      let y = 5
       if (entry.messaging) {
+        let return_message = "Sorry, I didn't get that.\nOptions:\nAll players\nThis will give you a list of all players in FPL"
         let messaging = entry.messaging[0];
-        let sender_object = messaging.sender
-        let sender = sender_object.id
-        let message_text = messaging.message.text;
-        sendText(sender, "Text echo: " + message_text)
+        let sender = messaging.sender.id;
+        let message = messaging.message.text;
+        // let comparison_substring = message.split("Compare")[1];
+        // if (comparison_substring) {
+        //   players = comparison_substring.join(" ")
+        //   players_data = {}
+        //   players.forEach(function (player) {
+        //     player_data = get_player_stats(player, stat_fields)
+        //     players_data[player] = player_data;
+        //   });
+        //   return_message = players_data;
+        // }
+        if (message === "All players") {
+          all_players = get_all_players()
+          return_message = all_players
+        }
+        sendText(sender, return_message)
       }
     });
 
@@ -77,6 +75,54 @@ app.post('/webhook', (req, res) => {
 
 });
 
+
+
+function get_all_players(player, stat_fields) {
+  raw_response = request({
+    url: "https://draft.premierleague.com/api/bootstrap-static",
+    method: "GET",
+  },
+    function(error, response, body) {
+      if (error) {
+        console.log("sending error")
+      } else if (response.body.error) {
+        console.log("response body error")
+      }
+    }
+  ) 
+  return 
+}
+
+
+function get_player_stats(player, stat_fields) {
+  https://draft.premierleague.com/api/bootstrap-static
+let url = 'https://users.premierleague.com/accounts/login/'
+let payload = {
+ 'password': "",
+ 'login': '',
+ 'redirect_uri': 'https://fantasy.premierleague.com/a/login',
+ 'app': 'plfpl-web'
+}
+
+  raw_response = request({
+    url: "https://graph.facebook.com/v4.0/me/messages",
+    qs: {access_token: page_token},
+    method: "GET",
+    json: {
+      recipient: {id: sender}, 
+      message: messageData
+    }
+  },
+    function(error, response, body) {
+      if (error) {
+        console.log("sending error")
+      } else if (response.body.error) {
+        console.log("response body error")
+      }
+    }
+  ) 
+  return 
+}
 
 function sendText(sender, text) {
   let messageData = {text: text};
@@ -97,7 +143,7 @@ function sendText(sender, text) {
       }
     }
   )
- }
+}
 
 
 // Adds support for GET requests to our webhook
