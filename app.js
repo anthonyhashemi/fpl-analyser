@@ -10,6 +10,12 @@ const
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(bodyParser.json()); // creates express http server
 
+
+const fs = require('fs');
+
+let config = fs.readFileSync('config.json');
+let page_token = config["page_token"];
+
 // Sets server port and logs message on success
 app.listen(process.env.PORT || 1337, () => console.log('webhook is listening'));
 
@@ -25,8 +31,6 @@ app.get('/', function(req, res) {
   res.send('Hi I am a chatbot\n');
 });
 
-
-page_token = ""
 
 url = 'https://users.premierleague.com/accounts/login/'
 payload = {
@@ -79,7 +83,7 @@ function sendText(sender, text) {
   let messageData = {text: text};
   request({
     url: "https://graph.facebook.com/v3.3/me/messages",
-    qs: {access_token, token},
+    qs: {access_token, page_token},
     method: "POST",
     json: {
       receipt: {id: sender}, 
