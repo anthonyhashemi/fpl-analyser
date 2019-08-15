@@ -15,11 +15,12 @@ let page_token = process.env.page_token;
 // Sets server port and logs message on success
 app.listen(process.env.PORT || 1337, () => console.log("webhook is listening"));
 
+let session_secret = process.env.session_secret
 //Set up session handler
 app.use(
   session({
     cookieName: "session",
-    secret: "86i495c/)hy9ybyJ)6ek|883e3V[6%Dc`c~Skio*X|qZR6JYmOeI.=TuR>t`W^$",
+    secret: session_secret,
     duration: 30 * 60 * 1000,
     activeDuration: 5 * 60 * 1000,
   })
@@ -96,36 +97,6 @@ function send_all_players_list(recipient) {
     }
   );
 }
-
-// function get_player_stats(player, stat_fields) {
-//   https://draft.premierleague.com/api/bootstrap-static
-// let url = 'https://users.premierleague.com/accounts/login/'
-// let payload = {
-//  'password': "",
-//  'login': '',
-//  'redirect_uri': 'https://fantasy.premierleague.com/a/login',
-//  'app': 'plfpl-web'
-// }
-
-//   raw_response = request({
-//     url: "https://graph.facebook.com/v4.0/me/messages",
-//     qs: {access_token: page_token},
-//     method: "GET",
-//     json: {
-//       recipient: {id: sender},
-//       message: messageData
-//     }
-//   },
-//     function(error, response, body) {
-//       if (error) {
-//         console.log("sending error")
-//       } else if (response.body.error) {
-//         console.log("response body error")
-//       }
-//     }
-//   )
-//   return
-// }
 
 function sendText(recipient, text) {
   let messageData = { text: text };
