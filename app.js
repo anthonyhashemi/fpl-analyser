@@ -80,19 +80,19 @@ function send_all_players_list(recipient) {
     },
     function(error, response, body) {
       if (error) {
-        console.log("sending error");
+        console.log("sending error: "+ error);
       } else if (response.body.error) {
-        console.log("response body error");
+        console.log("response body error: " + response.body.error);
       }
       let json_response = JSON.parse(body);
       let all_players = json_response["elements"];
       let players_points = [];
       all_players.forEach(function(player) {
         players_points.push([
-          player["web_name"] + ": " + player["total_points"] + " points\n"
+          player["web_name"] + ": " + player["total_points"] + " points"
         ]);
       });
-      let return_message = players_points.slice(1, 100).toString().replace(",", "");
+      let return_message = players_points.slice(1, 100).join("\n");
       sendText(recipient, return_message);
     }
   );
@@ -123,7 +123,7 @@ function sendText(recipient, text) {
 // Adds support for GET requests to our webhook
 app.get("/webhook", (req, res) => {
   // Your verify token. Should be a random string.
-  let VERIFY_TOKEN = "ants_token";
+  let VERIFY_TOKEN = process.env.verify_token;
 
   // Parse the query params
   let mode = req.query["hub.mode"];
