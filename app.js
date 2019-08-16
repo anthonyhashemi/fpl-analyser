@@ -15,7 +15,7 @@ let page_token = process.env.page_token;
 // Sets server port and logs message on success
 app.listen(process.env.PORT || 1337, () => console.log("webhook is listening"));
 
-let session_secret = process.env.session_secret
+let session_secret = process.env.session_secret;
 //Set up session handler
 app.use(
   session({
@@ -46,20 +46,25 @@ app.post("/webhook", (req, res) => {
         let message = messaging.message.text;
         // let comparison_substring = message.split("Compare")[1];
         // if (comparison_substring) {
-        //   players = comparison_substring.join(" ")
-        //   players_data = {}
-        //   players.forEach(function (player) {
-        //     player_data = get_player_stats(player, stat_fields)
+        //   players = comparison_substring.join(" ");
+        //   players_data = {};
+        //   players.forEach(function(player) {
+        //     player_data = get_player_stats(player, ["xG"]);
         //     players_data[player] = player_data;
         //   });
         //   return_message = players_data;
         // }
-        if (message === "All players") {
-          send_all_players_list(sender);
-        } else {
-          let text =
-            "Sorry, I didn't get that.\nOptions:\n'All players'\nThis will give you a list of all players in FPL";
-          sendText(sender, text);
+        try {
+          player = message;
+          send_player_info(sender, message);
+        } catch {
+          if (message === "All players") {
+            send_all_players_list(sender);
+          } else {
+            let text =
+              "Sorry, I didn't get that.\nOptions:\n'<Player Name>':This will return all info on that player.\n'All players'\nThis will give you a list of all players in FPL";
+            sendText(sender, text);
+          }
         }
       }
     });
@@ -72,6 +77,32 @@ app.post("/webhook", (req, res) => {
   }
 });
 
+function send_player_info(recipient, desired_player) {
+  request(
+    {
+      url: "https://draft.premierleague.com/api/bootstrap-static",
+      method: "GET",
+    },
+    function(error, response, body) {
+      if (error) {
+        console.log("sending error: " + error);
+      } else if (response.body.error) {
+        console.log("response body error: " + response.body.error);
+      }
+      let json_response = JSON.parse(body);
+      let all_players = json_response["elements"];
+      let player_info = [];
+      all_players.forEach(function(player) {
+        if (player["web_name"] === desired_player) {
+          player_info = desired_player;
+        }
+      });
+      let return_message = player_info.join("\n");
+      sendText(recipient, return_message);
+    }
+  );
+}
+
 function send_all_players_list(recipient) {
   request(
     {
@@ -80,7 +111,7 @@ function send_all_players_list(recipient) {
     },
     function(error, response, body) {
       if (error) {
-        console.log("sending error: "+ error);
+        console.log("sending error: " + error);
       } else if (response.body.error) {
         console.log("response body error: " + response.body.error);
       }
@@ -89,7 +120,7 @@ function send_all_players_list(recipient) {
       let players_points = [];
       all_players.forEach(function(player) {
         players_points.push([
-          player["web_name"] + ": " + player["total_points"] + " points"
+          player["web_name"] + ": " + player["total_points"] + " points",
         ]);
       });
       let return_message = players_points.slice(1, 100).join("\n");
