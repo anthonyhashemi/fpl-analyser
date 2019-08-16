@@ -54,17 +54,15 @@ app.post("/webhook", (req, res) => {
         //   });
         //   return_message = players_data;
         // }
-        try {
+        if (message.indexOf("Player: ") === 0) {
           let player = message;
           send_player_info(sender, player);
-        } catch {
-          if (message === "All players") {
-            send_all_players_list(sender);
-          } else {
-            let text =
-              "Sorry, I didn't get that.\nOptions:\n'<Player Name>':This will return all info on that player.\n'All players'\nThis will give you a list of all players in FPL";
-            sendText(sender, text);
-          }
+        } else if (message === "All players") {
+          send_all_players_list(sender);
+        } else {
+          let text =
+            "Sorry, I didn't get that.\nOptions:\n'Player: <Player Name>':This will return all info on that player.\n'All players'\nThis will give you a list of all players in FPL";
+          sendText(sender, text);
         }
       }
     });
@@ -96,7 +94,7 @@ function send_player_info(recipient, desired_player) {
         let player = all_players[i];
         if (player["web_name"] === desired_player) {
           let player_info = [desired_player];
-          for (var key in player) {
+          for (let key in player) {
             if (player.hasOwnProperty(key)) {
               player_info.push(key + ": " + player[key]);
             }
@@ -104,9 +102,6 @@ function send_player_info(recipient, desired_player) {
           return_message = player_info.join("\n");
           break;
         }
-      }
-      if (return_message === "Player not found") {
-        throw Error(return_message);
       }
       sendText(recipient, return_message);
     }
