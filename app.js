@@ -56,7 +56,7 @@ app.post("/webhook", (req, res) => {
         // }
         try {
           let player = message;
-          send_player_info(sender, message);
+          send_player_info(sender, player);
         } catch {
           if (message === "All players") {
             send_all_players_list(sender);
@@ -97,7 +97,7 @@ function send_player_info(recipient, desired_player) {
           player_info = desired_player;
         }
       });
-      let return_message = player_info.join("\n");
+      let return_message = str(player_info);
       sendText(recipient, return_message);
     }
   );
