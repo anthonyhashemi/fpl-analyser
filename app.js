@@ -94,7 +94,6 @@ function send_player_info(recipient, desired_player) {
       for (let i = 0; i < all_players.length; i++) {
         let player = all_players[i];
         if (player["web_name"] === desired_player) {
-          player_info = player;
           let player_info = [desired_player];
           for (var key in player) {
             if (player.hasOwnProperty(key)) {
