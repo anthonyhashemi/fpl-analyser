@@ -61,7 +61,7 @@ app.post("/webhook", (req, res) => {
           send_all_players_list(sender);
         } else {
           let text =
-            "Sorry, I didn't get that.\nOptions:\n'Player: <Player Name>':This will return all info on that player.\n'All players'\nThis will give you a list of all players in FPL";
+            "Sorry, I didn't get that.\nOptions:\n\n'Player: <Player Name>':\nThis will return all info on that player.\n\n'All players':\nThis will give you a list of all players in FPL";
           sendText(sender, text);
         }
       }
