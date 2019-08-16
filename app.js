@@ -106,7 +106,7 @@ function send_player_info(recipient, desired_player) {
         }
       }
     }
-  );
+  ).on();
 }
 
 function send_all_players_list(recipient) {
