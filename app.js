@@ -92,12 +92,12 @@ function send_player_info(recipient, desired_player) {
       let json_response = JSON.parse(body);
       let all_players = json_response["elements"];
       let player_info = [];
-      all_players.forEach(function(player) {
+      for (var player in all_players) {
         if (player["web_name"] === desired_player) {
           player_info = player;
           break;
         }
-      });
+      }
       let return_message = JSON.stringify(player_info);
       sendText(recipient, return_message);
     }
