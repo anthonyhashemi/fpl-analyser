@@ -94,7 +94,8 @@ function send_player_info(recipient, desired_player) {
       let player_info = [];
       all_players.forEach(function(player) {
         if (player["web_name"] === desired_player) {
-          player_info = desired_player;
+          player_info = player;
+          break;
         }
       });
       let return_message = JSON.stringify(player_info);
