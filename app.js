@@ -96,16 +96,13 @@ function send_player_info(recipient, desired_player) {
         let player = all_players[i];
         if (player["web_name"] === desired_player) {
           player_info = player;
+          let return_message = JSON.stringify(player_info);
+          sendText(recipient, return_message);
           break;
         }
       }
-      let return_message = JSON.stringify(player_info);
-      if (return_message === "[]") {
-        return_message = "Couldn't find player.";
-      }
-      sendText(recipient, return_message);
     }
-  ).on();
+  );
 }
 
 function send_all_players_list(recipient) {
