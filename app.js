@@ -91,18 +91,17 @@ function send_player_info(recipient, desired_player) {
       }
       let json_response = JSON.parse(body);
       let all_players = json_response["elements"];
-      let player_info = [];
       for (let i = 0; i < all_players.length; i++) {
         let player = all_players[i];
         if (player["web_name"] === desired_player) {
           player_info = player;
-          let output = desired_player;
+          let player_info = [desired_player];
           for (var key in player) {
             if (player.hasOwnProperty(key)) {
-              output.push(key + ": " + player[key]);
+              player_info.push(key + ": " + player[key]);
             }
           }
-          let return_message = output.join("\n");
+          let return_message = player_info.join("\n");
           sendText(recipient, return_message);
           break;
         }
