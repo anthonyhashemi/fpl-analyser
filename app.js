@@ -97,7 +97,7 @@ function send_player_info(recipient, desired_player) {
           player_info = desired_player;
         }
       });
-      let return_message = str(player_info);
+      let return_message = JSON.stringify(player_info);
       sendText(recipient, return_message);
     }
   );
