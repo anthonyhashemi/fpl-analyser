@@ -91,6 +91,7 @@ function send_player_info(recipient, desired_player) {
       }
       let json_response = JSON.parse(body);
       let all_players = json_response["elements"];
+      let return_message = "Player not found";
       for (let i = 0; i < all_players.length; i++) {
         let player = all_players[i];
         if (player["web_name"] === desired_player) {
@@ -100,13 +101,13 @@ function send_player_info(recipient, desired_player) {
               player_info.push(key + ": " + player[key]);
             }
           }
-          let return_message = player_info.join("\n");
-          sendText(recipient, return_message);
+          return_message = player_info.join("\n");
           break;
         }
       }
+      sendText(recipient, return_message);
     }
-  ).on();
+  );
 }
 
 function send_all_players_list(recipient) {
