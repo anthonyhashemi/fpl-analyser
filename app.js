@@ -101,11 +101,11 @@ function send_player_info(recipient, desired_player) {
       }
       let return_message = JSON.stringify(player_info);
       if (return_message === "[]") {
-        throw Error("Couldn't find player.");
+        return_message = "Couldn't find player.";
       }
       sendText(recipient, return_message);
     }
-  );
+  ).on();
 }
 
 function send_all_players_list(recipient) {
