@@ -55,7 +55,7 @@ app.post("/webhook", (req, res) => {
         //   return_message = players_data;
         // }
         try {
-          player = message;
+          let player = message;
           send_player_info(sender, message);
         } catch {
           if (message === "All players") {
