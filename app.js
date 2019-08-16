@@ -105,7 +105,7 @@ function send_player_info(recipient, desired_player) {
           break;
         }
       }
-      if ((return_message = "Player not found")) {
+      if (return_message === "Player not found") {
         throw Error(return_message);
       }
       sendText(recipient, return_message);
