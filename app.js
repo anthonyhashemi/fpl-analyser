@@ -92,7 +92,8 @@ function send_player_info(recipient, desired_player) {
       let json_response = JSON.parse(body);
       let all_players = json_response["elements"];
       let player_info = [];
-      for (var player in all_players) {
+      for (let i = 0; i < all_players.length; i++) {
+        let player = all_players[i];
         if (player["web_name"] === desired_player) {
           player_info = player;
           break;
