@@ -96,7 +96,13 @@ function send_player_info(recipient, desired_player) {
         let player = all_players[i];
         if (player["web_name"] === desired_player) {
           player_info = player;
-          let return_message = JSON.stringify(player_info);
+          let output = desired_player;
+          for (var key in player) {
+            if (player.hasOwnProperty(key)) {
+              output.push(key + ": " + player[key]);
+            }
+          }
+          let return_message = output.join("\n");
           sendText(recipient, return_message);
           break;
         }
