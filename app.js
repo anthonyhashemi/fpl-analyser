@@ -46,7 +46,7 @@ app.post("/webhook", (req, res) => {
         let message = messaging.message.text;
         // }
         if (message.indexOf("Player: ") === 0) {
-          let player = message;
+          let player = message.split("Player: ")[1];
           send_player_info(sender, player);
         } else if (message === "All players") {
           send_all_players_list(sender);
