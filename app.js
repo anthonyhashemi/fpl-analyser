@@ -154,7 +154,7 @@ function send_player_comparison(recipient, desired_player1, desired_player2) {
         }
       }
       if (return_message) {
-        return_message = desired_player1 + " and " desired_player2 " not found";
+        return_message = desired_player1 + " and " + desired_player2 + " not found";
       } else if (return_message) {
       }
 
