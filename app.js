@@ -44,24 +44,31 @@ app.post("/webhook", (req, res) => {
         let messaging = entry.messaging[0];
         let sender = messaging.sender.id;
         let message = messaging.message.text;
-        // let comparison_substring = message.split("Compare")[1];
-        // if (comparison_substring) {
-        //   players = comparison_substring.join(" ");
-        //   players_data = {};
-        //   players.forEach(function(player) {
-        //     player_data = get_player_stats(player, ["xG"]);
-        //     players_data[player] = player_data;
-        //   });
-        //   return_message = players_data;
         // }
         if (message.indexOf("Player: ") === 0) {
           let player = message;
           send_player_info(sender, player);
         } else if (message === "All players") {
           send_all_players_list(sender);
+        } else if (message === "Fields") {
+          // send_fields_list(sender);
+        } else if (message.indexOf("Compare: ") === 0) {
+          let players = message.split("Compare: ")[1];
+          let player1 = players[0];
+          let player2 = players[1];
+          // send_player_comparison(sender, player1, player2, fields);
         } else {
           let text =
-            "Sorry, I didn't get that.\nOptions:\n\n'Player: <Player Name>':\nThis will return all info on that player.\n\n'All players':\nThis will give you a list of all players in FPL";
+            "Sorry, I didn't get that.\n\
+            Options:\n\n\
+            'All players':\n\
+            Returns a list of all the players in FPL alongside their total points.\n\n\
+            'Player: <Player Name>':\n\
+            Returns all info on that player.\n\n\
+            'Fields':\n\
+            Returns all the possible player info fields.\n\n\
+            'Compare: <Player 1> <Player 2>':\n\
+            Returns a comparison of the two players.";
           sendText(sender, text);
         }
       }
@@ -108,6 +115,57 @@ function send_player_info(recipient, desired_player) {
   );
 }
 
+function send_player_comparison(recipient, desired_player1, desired_player2) {
+  request(
+    {
+      url: "https://draft.premierleague.com/api/bootstrap-static",
+      method: "GET",
+    },
+    function(error, response, body) {
+      if (error) {
+        console.log("sending error: " + error);
+      } else if (response.body.error) {
+        console.log("response body error: " + response.body.error);
+      }
+      let json_response = JSON.parse(body);
+      let all_players = json_response["elements"];
+      let return_message = "";
+      let player1_info = "";
+      let player2_info = "";
+      for (let i = 0; i < all_players.length; i++) {
+        let player = all_players[i];
+        if (player["web_name"] === desired_player1) {
+          player1_info = [desired_player1];
+          for (let key in player) {
+            if (player.hasOwnProperty(key)) {
+              player1_info.push(key + ": " + player[key]);
+            }
+          }
+        } else if (player["web_name"] === desired_player2) {
+          player2_info = [desired_player2];
+          for (let key in player) {
+            if (player.hasOwnProperty(key)) {
+              player2_info.push(key + ": " + player[key]);
+            }
+          }
+        }
+        if (player1_info && player2_info) {
+          break;
+        }
+      }
+      if (return_message) {
+        return_message = desired_player1 + " and " desired_player2 " not found";
+      } else if (return_message) {
+      }
+
+      player1_stats = get_player_stats(player1, ["xG"]);
+      player2_stats = get_player_stats(player2, ["xG"]);
+      players_data = {};
+      return_message = players_data;
+      sendText(recipient, return_message);
+    }
+  );
+}
 function send_all_players_list(recipient) {
   request(
     {
