@@ -1,12 +1,18 @@
 "use strict";
 
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
+
 // Imports dependencies and set up http server
 const express = require("express"),
   session = require("client-sessions"),
   bodyParser = require("body-parser"),
   request = require("request"),
+  cors = require("cors"),
   app = express();
 
+app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json()); // creates express http server
 
@@ -22,12 +28,46 @@ app.use(
     cookieName: "session",
     secret: session_secret,
     duration: 30 * 60 * 1000,
-    activeDuration: 5 * 60 * 1000,
+    activeDuration: 5 * 60 * 1000
   })
 );
 
 app.get("/", function(req, res) {
-  res.send("Hi I am a chatbot\n");
+  res.sendFile(
+    "/Users/anthonyhashemi/Documents/Personal/PersonalProjects/fpl-analyser/server/index.html"
+  );
+});
+
+app.get("/players", function(req, res) {
+  request(
+    {
+      url: "https://draft.premierleague.com/api/bootstrap-static",
+      method: "GET"
+    },
+    function(error, response, body) {
+      if (error) {
+        error_message = "sending error: " + error;
+        console.log(error_message);
+        res.send(error_message);
+      } else if (response.body.error) {
+        error_message = "response body error: " + response.body.error;
+        console.log(error_message);
+        res.send(error_message);
+      }
+      let json_response = JSON.parse(body);
+      let players = json_response["elements"];
+      let id_to_team = {};
+      let teams = json_response["teams"].forEach(function(team) {
+        id_to_team[team["id"]] = team["name"];
+      });
+      players = players.map(function(player) {
+        let id = player["team"];
+        player["team"] = id_to_team[id];
+        return player;
+      });
+      res.send(players);
+    }
+  );
 });
 
 // Creates the endpoint for our webhook
@@ -56,7 +96,7 @@ app.post("/webhook", (req, res) => {
           let players = message.split("Compare: ")[1];
           let player1 = players[0];
           let player2 = players[1];
-          // send_player_comparison(sender, player1, player2, fields);
+          send_player_comparison(sender, player1, player2, ["go"]);
         } else {
           let text =
             "Sorry, I didn't get that.\n\
@@ -86,7 +126,7 @@ function send_player_info(recipient, desired_player) {
   request(
     {
       url: "https://draft.premierleague.com/api/bootstrap-static",
-      method: "GET",
+      method: "GET"
     },
     function(error, response, body) {
       if (error) {
@@ -119,7 +159,7 @@ function send_player_comparison(recipient, desired_player1, desired_player2) {
   request(
     {
       url: "https://draft.premierleague.com/api/bootstrap-static",
-      method: "GET",
+      method: "GET"
     },
     function(error, response, body) {
       if (error) {
@@ -153,8 +193,9 @@ function send_player_comparison(recipient, desired_player1, desired_player2) {
           break;
         }
       }
-      if (return_message) {
-        return_message = desired_player1 + " and " + desired_player2 + " not found";
+      if (!return_message) {
+        return_message =
+          desired_player1 + " and " + desired_player2 + " not found";
       } else if (return_message) {
       }
 
@@ -170,7 +211,7 @@ function send_all_players_list(recipient) {
   request(
     {
       url: "https://draft.premierleague.com/api/bootstrap-static",
-      method: "GET",
+      method: "GET"
     },
     function(error, response, body) {
       if (error) {
@@ -183,7 +224,7 @@ function send_all_players_list(recipient) {
       let players_points = [];
       all_players.forEach(function(player) {
         players_points.push([
-          player["web_name"] + ": " + player["total_points"] + " points",
+          player["web_name"] + ": " + player["total_points"] + " points"
         ]);
       });
       let return_message = players_points.slice(1, 100).join("\n");
@@ -201,8 +242,8 @@ function sendText(recipient, text) {
       method: "POST",
       json: {
         recipient: { id: recipient },
-        message: messageData,
-      },
+        message: messageData
+      }
     },
     function(error, response, body) {
       if (error) {
@@ -237,3 +278,28 @@ app.get("/webhook", (req, res) => {
     }
   }
 });
+
+function get_all_players() {
+  request(
+    {
+      url: "https://draft.premierleague.com/api/bootstrap-static",
+      method: "GET"
+    },
+    function(error, response, body) {
+      if (error) {
+        console.log("sending error: " + error);
+      } else if (response.body.error) {
+        console.log("response body error: " + response.body.error);
+      }
+      let json_response = JSON.parse(body);
+      let all_players = json_response["elements"];
+      // let players_points = [];
+      // all_players.forEach(function(player) {
+      //   players_points.push([
+      //     player["web_name"] + ": " + player["total_points"] + " points",
+      //   ]);
+      // });
+      return all_players;
+    }
+  );
+}

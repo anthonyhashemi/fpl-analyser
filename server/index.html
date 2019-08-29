@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>
+        FPL Analyser
+    </title>
+</head>
+
+<body>
+    <h1>Top Players</h1>
+    <table>
+        <tbody id="tbody">
+            <td>KEY</td>
+            <td>Value</td>
+        </tbody>
+        <script>
+            let all_players = [{ "goals": 3, "name": "Ant", "missed": 33, "saved": 444 }, { "goals": 2, "name": "bob", "missed": 23, "saved": 2 }];//get_all_players()
+            let tbody = document.getElementById("tbody");
+
+            for (let i = 0; i < all_players.length; i++) {
+                let tr = "<tr>";
+                let player = all_players[i];
+                for (key, value in player) {
+                    tr +=
+                        "<td>" +
+                        value +
+                        "</td>"
+                }
+
+                tr += "</tr > ";
+
+                /* We add the table row to the table body */
+                tbody.innerHTML += tr;
+            }
+        </script>
+    </table>
+
+</body>
+
+</html>
