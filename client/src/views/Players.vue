@@ -9,8 +9,7 @@
       <br />NO PLAYERS MATCH FILTERS
     </div>
     <div v-if="hasPlayers" class="players">
-      <h1>Players</h1>
-      A table of all the FPL Players.
+      <h1>Players</h1>A table of all the FPL Players.
       <b-table
         striped
         hover
@@ -123,8 +122,7 @@ export default {
   },
   methods: {
     async getPlayers() {
-      const response = await axios
-        .get(`http://localhost:1337/players`)
+      const response = await PlayersService.fetchPlayers()
         .then(response => {
           console.log(response);
           this.players = response.data.map(function(player) {
